@@ -139,7 +139,7 @@ const App = () => {
                   {/* 评论时间 */}
                   <span className="reply-time">{'2023-11-11'}</span>
                   {/* 评论数量 */}
-                  <span className="reply-time">点赞数:{100}</span>
+                  <span className="reply-time">点赞数:{1000}</span>
                   <span className="delete-btn">
                     删除
                   </span>
