@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.scss";
 import avatar from "./images/bozai.png";
 import _ from "lodash";
+const classNames = require("classnames");
 
 const defaultList = [
   {
@@ -74,7 +75,9 @@ const App = () => {
           <li className="nav-sort">
             {tab.map((item) => (
               <span
-                className={`nav-item ${type === item.type && "active"}`}
+                className={classNames("nav-item", {
+                  active: type === item.type,
+                })}
                 key={item.type}
                 onClick={() => handleClick(item.type)}
               >
