@@ -2,6 +2,9 @@ import { useState } from "react";
 import "./App.scss";
 import avatar from "./images/bozai.png";
 import _ from "lodash";
+import { v4 as uuidv4 } from "uuid";
+import dayjs from "dayjs";
+
 const classNames = require("classnames");
 
 const defaultList = [
@@ -64,6 +67,26 @@ const App = () => {
       setList(_.orderBy(list, "ctime", "desc"));
     }
   };
+  const [content, setContent] = useState("");
+  const inputRef = useRef(null);
+  const handlePublish = () => {
+    setList([
+      ...list,
+      {
+        rpid: uuidv4(),
+        user: {
+          uid: "13258165",
+          avatar,
+          uname: "周杰伦",
+        },
+        content: content,
+        ctime: dayjs(new Date()).format("MM-DD HH:mm"), //"10-18 08:15",
+        like: 88,
+      },
+    ]);
+    setContent("");
+    inputRef.current.focus();
+  };
   return (
     <div className="app">
       <div className="reply-navigation">
@@ -98,9 +121,14 @@ const App = () => {
             <textarea
               className="reply-box-textarea"
               placeholder="发一条友善的评论"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              ref={inputRef}
             />
             <div className="reply-box-send">
-              <div className="send-text">发布</div>
+              <div className="send-text" onClick={() => handlePublish()}>
+                发布
+              </div>
             </div>
           </div>
         </div>
