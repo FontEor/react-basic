@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.scss";
 import avatar from "./images/bozai.png";
+import _ from "lodash";
 
 const defaultList = [
   {
@@ -23,7 +24,7 @@ const defaultList = [
     },
     content: "我寻你千百度 日出到迟暮",
     ctime: "11-13 11:29",
-    like: 88,
+    like: 77,
   },
   {
     rpid: 1,
@@ -48,9 +49,19 @@ const tabs = [
 ];
 
 const App = () => {
-  const [list, setList] = useState(defaultList);
+  const [list, setList] = useState(_.orderBy(defaultList, "like", "desc"));
+  const [tab, setTab] = useState(tabs);
   const handleDel = (id) => {
     setList(list.filter((item) => item.rpid !== id));
+  };
+  const [type, setType] = useState("hot");
+  const handleClick = (type) => {
+    setType(type);
+    if (type === "hot") {
+      setList(_.orderBy(list, "like", "desc"));
+    } else {
+      setList(_.orderBy(list, "ctime", "desc"));
+    }
   };
   return (
     <div className="app">
@@ -61,8 +72,15 @@ const App = () => {
             <span className="total-reply">{10}</span>
           </li>
           <li className="nav-sort">
-            <span className="nav-item">最新</span>
-            <span className="nav-item">最热</span>
+            {tab.map((item) => (
+              <span
+                className={`nav-item ${type === item.type && "active"}`}
+                key={item.type}
+                onClick={() => handleClick(item.type)}
+              >
+                {item.text}
+              </span>
+            ))}
           </li>
         </ul>
       </div>
