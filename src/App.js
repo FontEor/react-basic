@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.scss";
 import avatar from "./images/bozai.png";
 import _ from "lodash";
