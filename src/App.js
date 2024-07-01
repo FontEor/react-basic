@@ -18,6 +18,7 @@ const tabs = [
   { type: "time", text: "最新" },
 ];
 
+//自定义hook
 function useGetList() {
   const [list, setList] = useState([]);
   useEffect(() => {
@@ -29,6 +30,35 @@ function useGetList() {
     });
   }, []);
   return [list, setList];
+}
+//封装组件
+function Item({ item, onDel }) {
+  return (
+    <div key={item.rpid} className="reply-item">
+      <div className="root-reply-avatar">
+        <div className="bili-avatar">
+          <img className="bili-avatar-img" alt="" src={item.user.avatar} />
+        </div>
+      </div>
+      <div className="content-wrap">
+        <div className="user-info">
+          <div className="user-name">{item.user.uname}</div>
+        </div>
+        <div className="root-reply">
+          <span className="reply-content">{item.content}</span>
+          <div className="reply-info">
+            <span className="reply-time">{item.ctime}</span>
+            <span className="reply-time">点赞数:{item.like}</span>
+            {item.user.uid === user.uid && (
+              <span className="delete-btn" onClick={() => onDel(item.rpid)}>
+                删除
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 const App = () => {
   const [list, setList] = useGetList();
@@ -113,37 +143,7 @@ const App = () => {
         </div>
         <div className="reply-list">
           {list.map((item) => (
-            <div key={item.rpid} className="reply-item">
-              <div className="root-reply-avatar">
-                <div className="bili-avatar">
-                  <img
-                    className="bili-avatar-img"
-                    alt=""
-                    src={item.user.avatar}
-                  />
-                </div>
-              </div>
-              <div className="content-wrap">
-                <div className="user-info">
-                  <div className="user-name">{item.user.uname}</div>
-                </div>
-                <div className="root-reply">
-                  <span className="reply-content">{item.content}</span>
-                  <div className="reply-info">
-                    <span className="reply-time">{item.ctime}</span>
-                    <span className="reply-time">点赞数:{item.like}</span>
-                    {item.user.uid === user.uid && (
-                      <span
-                        className="delete-btn"
-                        onClick={() => handleDel(item.rpid)}
-                      >
-                        删除
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Item item={item} key={item.id} onDel={handleDel} />
           ))}
         </div>
       </div>
