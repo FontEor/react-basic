@@ -1,47 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./App.scss";
 import avatar from "./images/bozai.png";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
+import axios from "axios";
 
 const classNames = require("classnames");
 
-const defaultList = [
-  {
-    rpid: 3,
-    user: {
-      uid: "13258165",
-      avatar,
-      uname: "周杰伦",
-    },
-    content: "哎哟，不错哦",
-    ctime: "10-18 08:15",
-    like: 88,
-  },
-  {
-    rpid: 2,
-    user: {
-      uid: "36080105",
-      avatar,
-      uname: "许嵩",
-    },
-    content: "我寻你千百度 日出到迟暮",
-    ctime: "11-13 11:29",
-    like: 77,
-  },
-  {
-    rpid: 1,
-    user: {
-      uid: "30009257",
-      avatar,
-      uname: "黑马前端",
-    },
-    content: "学前端就来黑马",
-    ctime: "10-19 09:00",
-    like: 66,
-  },
-];
 const user = {
   uid: "30009257",
   avatar,
@@ -52,8 +18,20 @@ const tabs = [
   { type: "time", text: "最新" },
 ];
 
+function useGetList() {
+  const [list, setList] = useState([]);
+  useEffect(() => {
+    axios({
+      url: "http://localhost:3001/list",
+      methods: "get",
+    }).then((res) => {
+      setList(_.orderBy(res.data, "like", "desc"));
+    });
+  }, []);
+  return [list, setList];
+}
 const App = () => {
-  const [list, setList] = useState(_.orderBy(defaultList, "like", "desc"));
+  const [list, setList] = useGetList();
   const [tab, setTab] = useState(tabs);
   const handleDel = (id) => {
     setList(list.filter((item) => item.rpid !== id));
@@ -87,6 +65,7 @@ const App = () => {
     setContent("");
     inputRef.current.focus();
   };
+
   return (
     <div className="app">
       <div className="reply-navigation">
