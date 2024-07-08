@@ -5,6 +5,8 @@ import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { decrement, increament } from "./store/modules/countStore";
 
 const classNames = require("classnames");
 
@@ -61,6 +63,8 @@ function Item({ item, onDel }) {
   );
 }
 const App = () => {
+  const { count } = useSelector((state) => state.counter);
+  const dispatch = useDispatch();
   const [list, setList] = useGetList();
   const [tab, setTab] = useState(tabs);
   const handleDel = (id) => {
@@ -102,7 +106,10 @@ const App = () => {
         <ul className="nav-bar">
           <li className="nav-title">
             <span className="nav-title-text">评论</span>
-            <span className="total-reply">{10}</span>
+
+            <span className="total-reply">{count}</span>
+            <button onClick={() => dispatch(decrement())}>-</button>
+            <button onClick={() => dispatch(increament())}>+</button>
           </li>
           <li className="nav-sort">
             {tab.map((item) => (
