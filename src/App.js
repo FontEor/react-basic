@@ -5,8 +5,9 @@ import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { decrement, increament } from "./store/modules/countStore";
+import { useSelector, useDispatch, Provider } from "react-redux";
+import { decrement, increament, addToNum } from "./store/modules/countStore";
+import { fetchChannelLsit } from "./store/modules/channelStore";
 import Item from "./components/Item";
 
 const classNames = require("classnames");
@@ -35,8 +36,13 @@ function useGetList() {
   return [list, setList];
 }
 const App = () => {
-  const { count } = useSelector((state) => state.counter);
   const dispatch = useDispatch();
+  const { count } = useSelector((state) => state.counter);
+  const { channelList } = useSelector((state) => state.channel);
+  useEffect(() => {
+    dispatch(fetchChannelLsit());
+  }, [dispatch]);
+
   const [list, setList] = useGetList();
   const [tab, setTab] = useState(tabs);
   const handleDel = (id) => {
@@ -79,6 +85,12 @@ const App = () => {
           <span className="total-reply">控制</span>
           <button onClick={() => dispatch(decrement())}>-</button>
           <button onClick={() => dispatch(increament())}>+</button>
+          <button onClick={() => dispatch(addToNum(10))}>+10</button>
+          <ul>
+            {channelList.map((item) => (
+              <li key={item.id}>{item.name}</li>
+            ))}
+          </ul>
         </div>
         <ul className="nav-bar">
           <li className="nav-title">
