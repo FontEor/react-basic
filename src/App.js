@@ -38,7 +38,7 @@ function useGetList() {
 const App = () => {
   const dispatch = useDispatch();
   const { count } = useSelector((state) => state.counter);
-  const { channelList } = useSelector((state) => state.channel);
+
   useEffect(() => {
     dispatch(fetchChannelLsit());
   }, [dispatch]);
@@ -86,11 +86,6 @@ const App = () => {
           <button onClick={() => dispatch(decrement())}>-</button>
           <button onClick={() => dispatch(increament())}>+</button>
           <button onClick={() => dispatch(addToNum(10))}>+10</button>
-          <ul>
-            {channelList.map((item) => (
-              <li key={item.id}>{item.name}</li>
-            ))}
-          </ul>
         </div>
         <ul className="nav-bar">
           <li className="nav-title">
