@@ -23,8 +23,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "craco start",
+    "build": "craco build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "npx json-server db.json --port 3001"
@@ -48,6 +48,7 @@
     ]
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "eslint": "^8.57.0",
     "eslint-config-react-app": "^7.0.1",
     "sass": "^1.77.8",
