@@ -1,11 +1,16 @@
 import { createBrowserRouter, createHashRouter } from "react-router-dom";
-import App from "../App";
-import Channel from "../vie/Channel";
-import Params from "../vie/Params";
-import Article from "../vie/Article";
-import Layout from "../pages/Layout";
-import Notfound from "../pages/404";
+import App from "@/App";
+import Channel from "@/vie/Channel";
+import Params from "@/vie/Params";
+import Article from "@/vie/Article";
+import Layout from "@/pages/Layout";
+import Notfound from "@/pages/404";
+import Login from "@/pages/Login";
 const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login></Login>,
+  },
   {
     path: "/",
     element: <Layout></Layout>,
