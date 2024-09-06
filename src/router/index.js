@@ -3,8 +3,8 @@ import App from "../App";
 import Channel from "../vie/Channel";
 import Params from "../vie/Params";
 import Article from "../vie/Article";
-import Layout from "../vie/Layout";
-import Notfound from "../vie/404";
+import Layout from "../pages/Layout";
+import Notfound from "../pages/404";
 const router = createBrowserRouter([
   {
     path: "/",
