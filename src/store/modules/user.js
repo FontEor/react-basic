@@ -1,26 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { request } from "../../utils";
+import { request, setToken, getToken, clearToken } from "@/utils";
 
 const userStore = createSlice({
   name: "user",
   initialState: {
-    token: "",
+    token: getToken() || "",
   },
   reducers: {
-    setToken(state, action) {
+    setStoreToken(state, action) {
       state.token = action.payload;
+      setToken(action.payload);
     },
   },
 });
-const { setToken } = userStore.actions;
+const { setStoreToken } = userStore.actions;
 const userReducer = userStore.reducer;
 
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     const res = await request.post("/authorizations", loginForm);
-    dispatch(setToken(res.data.token));
+    dispatch(setStoreToken(res.data.token));
   };
 };
 
-export { setToken, fetchLogin };
+export { setStoreToken, fetchLogin };
 export default userReducer;
