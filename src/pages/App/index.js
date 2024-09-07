@@ -1,14 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.scss";
-import avatar from "./images/bozai.png";
+import avatar from "@/assets/bozai.png";
 import _ from "lodash";
 import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 import axios from "axios";
-import { useSelector, useDispatch, Provider } from "react-redux";
-import { decrement, increament, addToNum } from "./store/modules/countStore";
-import { fetchChannelLsit } from "./store/modules/channelStore";
-import Item from "./components/Item";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  decrement,
+  increament,
+  addToNum,
+} from "../../store/modules/countStore";
+import { fetchChannelLsit } from "../../store/modules/channelStore";
+import Item from "../../components/Item";
 
 const classNames = require("classnames");
 

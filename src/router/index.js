@@ -1,11 +1,12 @@
 import { createBrowserRouter, createHashRouter } from "react-router-dom";
-import App from "@/App";
-import Channel from "@/vie/Channel";
-import Params from "@/vie/Params";
-import Article from "@/vie/Article";
+import App from "@/pages/App";
+import Channel from "@/pages/App/Channel";
+import Params from "@/pages/App/Params";
+import Article from "@/pages/App/Article";
 import Layout from "@/pages/Layout";
 import Notfound from "@/pages/404";
 import Login from "@/pages/Login";
+import AuthRoute from "@/components/AuthRoute";
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -13,7 +14,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Layout></Layout>,
+    element: (
+      <AuthRoute>
+        <Layout />
+      </AuthRoute>
+    ),
     children: [
       {
         // path: "/app",
