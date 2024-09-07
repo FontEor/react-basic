@@ -6,29 +6,47 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import "./index.scss";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserInfo, clearUserInfo } from "@/store/modules/user";
 
 const { Header, Sider } = Layout;
 
 const items = [
   {
     label: "首页",
-    key: "1",
+    key: "/",
     icon: <HomeOutlined />,
   },
   {
     label: "文章管理",
-    key: "2",
+    key: "/article",
     icon: <DiffOutlined />,
   },
   {
     label: "创建文章",
-    key: "3",
+    key: "/publish",
     icon: <EditOutlined />,
   },
 ];
 
 const GkLayout = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const menuClick = (item) => {
+    navigate(item.key);
+  };
+  const selectedKey = location.pathname;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchUserInfo());
+  }, [dispatch]);
+  const userName = useSelector((state) => state.user.userInfo.name);
+  const onConfirm = () => {
+    dispatch(clearUserInfo());
+    navigate("/login");
+  };
   return (
     <Layout>
       <Header className="header">
@@ -36,9 +54,14 @@ const GkLayout = () => {
           <span>管理系统</span>
         </div>
         <div className="user-info">
-          <span className="user-name">柴柴老师</span>
+          <span className="user-name">{userName}</span>
           <span className="user-logout">
-            <Popconfirm title="是否确认退出？" okText="退出" cancelText="取消">
+            <Popconfirm
+              title="是否确认退出？"
+              okText="退出"
+              cancelText="取消"
+              onConfirm={onConfirm}
+            >
               <LogoutOutlined /> 退出
             </Popconfirm>
           </span>
@@ -49,9 +72,11 @@ const GkLayout = () => {
           <Menu
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={["1"]}
+            defaultSelectedKeys={["/"]}
+            selectedKeys={selectedKey}
             items={items}
             style={{ height: "100%", borderRight: 0 }}
+            onClick={menuClick}
           ></Menu>
         </Sider>
         <Layout className="layout-content" style={{ padding: 20 }}>

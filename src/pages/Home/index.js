@@ -1,11 +1,19 @@
-import React from "react";
-class Hello extends React.Component {
-  //静态方法
-  handleClick() {
-    console.log("点击事件");
-  }
-  render() {
-    return <button onClick={this.handleClick}>333</button>;
-  }
-}
-export default Hello;
+import { BarChart } from "@/pages/Echarts/BarChart";
+
+const Home = () => {
+  return (
+    <div>
+      <BarChart
+        xData={["Vue", "React", "Angular"]}
+        sData={[2000, 5000, 1000]}
+      />
+      <BarChart
+        xData={["Vue", "React", "Angular"]}
+        sData={[200, 500, 100]}
+        style={{ width: "500px", height: "400px" }}
+      />
+    </div>
+  );
+};
+
+export default Home;
