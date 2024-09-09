@@ -11,27 +11,34 @@ import {
   message,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import "./index.scss";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useEffect, useState, useRef } from "react";
-import { getChannelAPI, createArticleAPI } from "@/apis/article";
+import { useState, useRef } from "react";
+import { createArticleAPI } from "@/apis/article";
+import { useChanel } from "@/hooks/useChannel";
+import { useEffect } from "react";
+import { getArticleByIdAPI, EditArticleByIdAPI } from "@/apis/article";
 const { Option } = Select;
-
 const Publish = () => {
-  //获取频道列表
-  const [channelList, setChannelList] = useState([]);
-  useEffect(() => {
-    const getChannelList = async () => {
-      const res = await getChannelAPI();
-      setChannelList(res.data.channels);
-    };
-    getChannelList();
-  }, []);
+  const [searchParams] = useSearchParams();
+  const articleId = searchParams.get("id");
+  const [form] = Form.useForm();
+  const { channelList } = useChanel();
   const onFinish = async (formData) => {
-    if (imageType !== imageList.length)
+    if (imageType !== imageList.length) {
       return message.warning("图片类型和数量不一致");
+    }
+    const formatUrl = (list) => {
+      return list.map((item) => {
+        if (item.response) {
+          return item.response.data.url;
+        } else {
+          return item.url;
+        }
+      });
+    };
     const { channel_id, content, title } = formData;
     const params = {
       channel_id,
@@ -40,12 +47,33 @@ const Publish = () => {
       type: imageType,
       cover: {
         type: imageType,
-        images: imageList.map((item) => item.response.data.url),
+        images: formatUrl(imageList),
       },
     };
-    await createArticleAPI(params);
-    message.success("发布文章成功");
+    if (articleId) {
+      // 编辑
+      await EditArticleByIdAPI(articleId, params);
+    } else {
+      // 新增
+      await createArticleAPI(params);
+    }
+    message.success(`${articleId ? "编辑" : "发布"}文章成功`);
   };
+  useEffect(() => {
+    async function getArticleDetail() {
+      const res = await getArticleByIdAPI(articleId);
+      const { cover, ...formValue } = res.data;
+      // 1. 回填表单数据
+      form.setFieldsValue({ ...formValue, type: cover.type });
+      // 2. 回填封面图片
+      setImageType(cover.type); // 封面类型
+      setImageList(cover.images.map((url) => ({ url }))); // 封面list
+    }
+    if (articleId) {
+      // 拉取数据回显
+      getArticleDetail();
+    }
+  }, [articleId, form]);
   const cacheImageList = useRef([]);
   const [imageList, setImageList] = useState([]);
   const onUploadChange = (info) => {
@@ -75,7 +103,7 @@ const Publish = () => {
           <Breadcrumb
             items={[
               { title: <Link to={"/"}>首页</Link> },
-              { title: "发布文章" },
+              { title: `${articleId ? "编辑文章" : "发布文章"}` },
             ]}
           />
         }
@@ -85,6 +113,7 @@ const Publish = () => {
           wrapperCol={{ span: 16 }}
           initialValues={{ type: 1 }}
           onFinish={onFinish}
+          form={form}
         >
           <Form.Item
             label="标题"
