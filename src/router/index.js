@@ -2,14 +2,15 @@ import { createBrowserRouter, createHashRouter } from "react-router-dom";
 import App from "@/pages/App";
 import Channel from "@/pages/App/Channel";
 import Params from "@/pages/App/Params";
-// import Article from "@/pages/App/Article";
 import Layout from "@/pages/Layout";
 import Notfound from "@/pages/404";
 import Login from "@/pages/Login";
 import AuthRoute from "@/components/AuthRoute";
-import Home from "@/pages/Home";
-import Article from "@/pages/Article";
-import Publish from "@/pages/Publish";
+
+import { lazy, Suspense } from "react";
+const Publish = lazy(() => import("@/pages/Publish"));
+const Article = lazy(() => import("@/pages/Article"));
+const Home = lazy(() => import("@/pages/Home"));
 const router = createBrowserRouter([
   {
     path: "/login",
@@ -25,15 +26,27 @@ const router = createBrowserRouter([
     children: [
       {
         index: true, //设置默认二级路由
-        element: <Home></Home>,
+        element: (
+          <Suspense fallback={"加载中"}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         path: "/publish",
-        element: <Publish></Publish>,
+        element: (
+          <Suspense fallback={"加载中"}>
+            <Publish />
+          </Suspense>
+        ),
       },
       {
         path: "/article",
-        element: <Article></Article>,
+        element: (
+          <Suspense fallback={"加载中"}>
+            <Article />
+          </Suspense>
+        ),
       },
       {
         path: "/app",
